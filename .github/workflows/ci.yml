@@ -32,26 +32,26 @@ jobs:
         id: deps-cache
         with:
           path: deps
-          key: ${{ runner.os }}-mix-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
+          key: ${{ runner.os }}-mix-${{ hashFiles(format('{0}{1}', github.workspace, '/queuetopia/mix.lock')) }}
 
       - uses: actions/cache@v1
         id: build-cache
         with:
           path: _build
-          key: ${{ runner.os }}-build-${{ matrix.otp }}-${{ matrix.elixir }}-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
+          key: ${{ runner.os }}-build-${{ matrix.otp }}-${{ matrix.elixir }}-${{ hashFiles(format('{0}{1}', github.workspace, '/queuetopia/mix.lock')) }}
 
       - name: Install Dependencies
-        run: mix deps.get
+        run: cd queuetopia && mix deps.get
 
       - name: Linter
-        run: mix format --check-formatted
+        run: cd queuetopia && mix format --check-formatted
 
       - name: Run Tests
         run: |
-          source env/ci.env
-          mix test --trace
+          source queuetopia/env/ci.env
+          cd queuetopia && mix test --trace
 
       - name: Code coverage
         run: |
-          source env/ci.env
-          mix test --cover
+          source queuetopia/env/ci.env
+          cd queuetopia &&  mix test --cover
